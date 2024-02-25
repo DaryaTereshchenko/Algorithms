@@ -1,0 +1,8 @@
+{
+    "C_Cpp.errorSquiggles": "enabled",
+    "C_Cpp.default.compilerPath": "c:\\Users\\daria\\Downloads\\msys2-x86_64-20240113.exe",
+    "files.associations": {
+        "MLTable": "yaml",
+        "__locale": "c"
+    }
+}
