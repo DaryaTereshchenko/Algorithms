@@ -5,7 +5,7 @@ int zeroSubarray(int array[], int length){
         if (array[i] == 0) {
             return 1;
         }
-        for (int j = i + 1 ; j < length; j++){
+        for (int j = i; j < length; j++){
             if ((array[i] + array[j]) == 0){
                 return 1;
             } 
