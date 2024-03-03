@@ -16,36 +16,52 @@ void printBoard(int board[N][N]) {
     printf("\n");
 }
 
-/**
- * Check if it's safe to place a new Queen in the given position
-*/
 int isSafe(int board[N][N], int row, int col) {
+    // Check row and column
+    for (int i = 0; i < row; i++) {
+        if (board[i][col])
+            return 0;
+    }
+
+    // Check upper-left diagonal
+    for (int i = row, j = col; i >= 0 && j >= 0; i--, j--) {
+        printf("%d %d\n", i, j);
+        if (board[i][j])
+            return 0;
+    }
+
+    // Check upper-right diagonal
+    for (int i = row, j = col; i >= 0 && j < N; i--, j++) {
+        
+        if (board[i][j])
+            return 0;
+    }
 
     return 1;
 }
 
-
-/**
- * Try to place N queens in the board 
- * and update the global variable 'count'
-*/
 void solveNQueens(int board[N][N], int row) {
-    if (...) {
+    if (row == N) {
         count++;
+        // Uncomment the line below to print the board for each solution
         // printBoard(board);
         return;
     }
 
-    // try to place the queen col by col
-    ...
+    for (int col = 0; col < N; col++) {
+        if (isSafe(board, row, col)) {
+            board[row][col] = 1;
+            solveNQueens(board, row + 1);
+            board[row][col] = 0; // Backtrack
+        }
+    }
 }
 
 int main() {
     int board[N][N];
     memset(board, 0, sizeof(board));
 
-    // try to place the queen row by row
-    solveNQueens(..., ...);
+    solveNQueens(board, 0);
 
     printf("Total solutions: %d\n", count);
 
