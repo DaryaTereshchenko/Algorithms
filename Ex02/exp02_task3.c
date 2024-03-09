@@ -16,8 +16,8 @@ void hanoi(int n, char src, char aux, char dst) {
     }
     moveCount++;
     hanoi(n-1, src, dst, aux);
-    printf("Move disk %d from %c to %c\n", n, src, dst);
-    hanoi(n-1, aux, dst, src);
+    printf("step %d, disk %d: %c -> %c\n", ++moveCount, n, src, dst);
+    hanoi(n-1, aux, src, dst);
     return;
 }
 

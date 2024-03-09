@@ -1,0 +1,14 @@
+************************************* Invoked: Sun Mar 3 16:50:28 2024
+[0] Arguments: c:\Users\daria\Downloads\msys2-x86_64-20240113.exe, -std=gnu++17, -m64, -Wp,-v, -E, -dM, -x, c++, nul
+[10] Operations sanity check succeeded.
+[28] Using metadata cache from "C:/Users/daria/AppData/Local/cache\\qt-installer-framework\\d75f1c19-3379-3717-ae8d-1404b51494a9"
+[28] Found 0 cached items.
+[28] Language: en-US
+[28] Script file does not exist.
+************************************* Invoked: Sun Mar 3 16:50:28 2024
+[0] Arguments: c:\Users\daria\Downloads\msys2-x86_64-20240113.exe, -std=gnu++17, -m32, -Wp,-v, -E, -dM, -x, c++, nul
+[7] Operations sanity check succeeded.
+[22] Using metadata cache from "C:/Users/daria/AppData/Local/cache\\qt-installer-framework\\d75f1c19-3379-3717-ae8d-1404b51494a9"
+[22] Found 0 cached items.
+[22] Language: en-US
+[22] Script file does not exist.
