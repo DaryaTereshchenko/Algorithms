@@ -15,110 +15,120 @@ struct month {
 
 void print_months(struct month *head) {
     struct month *p = head;
-    while (p) {
-        printf("Month %d: %s\n", p->month_number, p->month_name);
+    while(p != NULL){
+        printf("%s (%d), ", p->month_name, p->month_number);
         p = p->next;
     }
+    printf("\n");
 }
 
-struct month *get_previous_month(struct month *head, struct month *m) {
+struct month *get_previous_month(struct month *head, struct month *a) {
     struct month *p = head;
-    while (p) {
-        if (p->next == m) {
-            return p;
-        }
+    if (p == NULL || a == NULL){
+        return NULL;
+    }else if (p->next == a){
+        return p;
+    }
+
+    while(p->next != a){
         p = p->next;
     }
+    return p;
 }
 
-struct month* swap_month(struct month *head, struct month *a, struct month *b) {
-    // If either a or b is NULL, return head
-    if (!a || !b) {
-        return head;
-    }
 
-    // If a and b are the same, no need to swap
+struct month *swap_month(struct month *head, struct month *a, struct month *b) {
+
+    /* printf("Swap %d with %d\n", a->month_number, b->month_number); */
+
+    struct month *prev_a;
+    struct month *prev_b;
+
+    /* Since its incremental slection sort, it is not needed to check for
+       head==b. We can always assume a comes before b in the order of the linked
+       list. */
     if (a == b) {
+        /* Trivial; nothing to do */
         return head;
+    } else if (head == a) {
+        /* Case: if a is head */
+        /* AHA: prev_a does not work in this case, thus return first, or if
+         * around
+         */
+        /* AHA: on head change, new head has to be returned and reassigned */
+
+        if (a->next == b) {
+            /* Subcase: if a and b are adjacent */
+            /* AHA: this is also a subcase */
+            a->next = b->next;
+            b->next = a;
+        } else {
+            /* Subcase: a and b are not adjacent */
+            /* These variables are needed in this case */
+            /* temporary head next, because head gets reassigned */
+            struct month *tmp_a_next = a->next;
+            prev_b = get_previous_month(head, b); /* preceding of b */
+            a->next = b->next;                    /* same as adjacent */
+            b->next = tmp_a_next; /* AHA: cannot say head->next, because
+                                     (head=a)->next gets reassigne */
+            prev_b->next = a;     /* same as adjacent, but with prev_b */
+        }
+        head = b; /* for both subcases: reassigne head */
     }
 
-    // Find the node before a
-    struct month *prev_a = NULL;
-    struct month *curr = head;
-    while (curr && curr != a) {
-        prev_a = curr;
-        curr = curr->next;
-    }
+    else if (a->next == b) {
+        /* Case: a and b are adjacent */
+        /* AHA: This is also a case to consider */
 
-    // Find the node before b
-    struct month *prev_b = NULL;
-    curr = head;
-    while (curr && curr != b) {
-        prev_b = curr;
-        curr = curr->next;
-    }
-
-    // If a or b is not found in the list, return head
-    if (!prev_a || !prev_b) {
-        return head;
-    }
-
-    // Swap the nodes
-    if (prev_a) {
+        prev_a = get_previous_month(head, a); /* get preceding of a */
+        a->next = b->next;                    /* reasigne node pointers */
+        b->next = a;
         prev_a->next = b;
     } else {
-        head = b; // if a is the head node
-    }
+        /* otherwise */
+        /* AHA: need to use tmp_a_next, instead of tmp_a at the beginning */
 
-    if (prev_b) {
+        /* temporary a next, because a gets reassigned */
+        struct month *tmp_a_next = a->next;
+        prev_a = get_previous_month(head, a); /* get preceding of a */
+        prev_b = get_previous_month(head, b); /* and b */
+        prev_a->next = b;                     /* use preceding of a */
+        a->next = b->next;
+        b->next = tmp_a_next;
         prev_b->next = a;
-    } else {
-        head = a; // if b is the head node
     }
 
-    struct month *temp = a->next;
-    a->next = b->next;
-    b->next = temp;
-
+    /* default return same head */
     return head;
 }
 
 struct month *selection_sort(struct month *head) {
-    struct month *p = head;
-    struct month *q = head;
-    struct month *min = head;
-    while (p) {
-        q = p->next;
-        min = p;
-        while (q) {
-            if (q->month_number < min->month_number) {
-                min = q;
+    /* Implement the selection sort algorithm */
+    /* AHA: k->next instead of i->next or tmp_i->next */
+
+    struct month *i; /* traveling pointer outer loop */
+    struct month *j; /* traveling pointer inner loop */
+    struct month *k; /* temporary storage for min val in inner loop */
+
+    i = head;
+    while (i != NULL) { /* for i=1 to n-1 do */
+        print_months(head);
+
+        k = i; /* k=i */
+        j = i->next;
+        while (j != NULL) { /* for j=i+1 to n do  */
+            if (j->month_number < k->month_number) {
+                k = j; /* if A[j] < A[k] then k=j */
             }
-            q = q->next;
+            j = j->next; /* j++ */
         }
-        head = swap_month(head, p, min);
-        p = p->next;
+        head = swap_month(head, i, k); /* exchange A[i] and A[k]*/
+
+        i = k->next; /* i++ */
     }
 
+    /* because head might have changed */
     return head;
-}
-
-int main(int argc, char *argv[]) {
-    /* Init month linked list */
-    struct month *head;
-    head = init_months(head);
-
-    /* Print the linked list as it is after initialization */
-    //print_months(head);
-
-    /* Sort the linked list */
-    head = selection_sort(head);
-    /* head = selection_sort(head); */
-    print_months(head);
-
-    /* Cleanup */
-    free_months(head);
-    return 0;
 }
 
 struct month *init_months(struct month *head) {
@@ -171,4 +181,20 @@ void free_months(struct month *head) {
         q = q->next;
     }
     free(p);
+}
+
+
+int main(int argc, char *argv[]) {
+    struct month *head;
+    head = init_months(head);
+
+    //printf("Sorting:\n");
+    print_months(head);
+
+    /* sort and print */
+    head = selection_sort(head);
+    print_months(head);
+
+    free_months(head);
+    return 0;
 }

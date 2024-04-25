@@ -8,29 +8,36 @@ void swap(int array[], int index1, int index2) {
     array[index1] = tmp;
 }
 
-int hoarePartition(int array[], int leftIndex, int rightIndex) {
-    int i = leftIndex - 1;
-    int j = rightIndex + 1;
-    int pivot = array[rightIndex];
-    while (1) {
-        do {
-            counter++;
-            j--;
-        } while (array[j] > pivot);
-        do {
-            counter++;
-            i++;
-        } while (array[i] < pivot);
-        if (i >= j) {
-            return i;
+int partition(int arr[], int leftIndex, int rightIndex){
+    int pivot = arr[rightIndex];
+
+    int l = leftIndex - 1;
+    int r = rightIndex + 1;
+
+    while (1){
+        // Find the value in the left side larger than pivot
+         do{
+            counter ++;
+            l++;
+         }while(arr[l] < pivot);
+
+        // Find the value in the right side smaller than pivot 
+        do{
+            counter ++;
+            r --;
+        }while(arr[r] > pivot);
+
+        // If two pointers meet 
+        if (l >= r){
+            return l;
         }
-        swap(array, i, j);
+        swap(arr, l, r);
     }
 }
 
 void quicksort(int array[], int leftIndex, int rightIndex) {
     if (leftIndex < rightIndex) {
-        int m = hoarePartition(array, leftIndex, rightIndex);
+        int m = partition(array, leftIndex, rightIndex);
         quicksort(array, leftIndex, m - 1);
         quicksort(array, m, rightIndex);
     }
